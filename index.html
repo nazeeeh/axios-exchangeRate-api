@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Currency</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <style>
+        .container{
+            text-align: center;
+        }
+        h2, h3{
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="container">
+       <marquee behavior="alternate" direction="right"><h2>Exchange rate as at: <strong>{{ date }}</strong></h2></marquee> 
+        
+       <h4>Base Currency: {{ base }}</h4> 
+        <table class="table table-sm table-hover table-bordered table-striped table-dark">
+            <thead>
+                <tr>
+                    <th scope="col">Currency</th>
+                    <th scope="col">Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(rate, currency) in  rates">
+                    <td>{{ currency }}</td>
+                    <td>{{ rate }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <script>
+         new Vue({
+          el : '#app', 
+          data() {
+            return{
+                rates : {},
+                base: null,
+                date: null
+            }
+          },
+
+          mounted(){
+              axios.get('https://api.exchangeratesapi.io/latest')
+              .then(response => {
+                  this.rates = response.data.rates;
+                  this.base = response.data.base;
+                  this.date = response.data.date;
+              })
+          }
+        });
+
+    </script>
+</body>
+</html>
